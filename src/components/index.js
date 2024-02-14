@@ -8,6 +8,9 @@ import { openModal,closeModal} from './modal.js';
 
 import { initialCards } from './cards.js';
 
+import { enableValidation, clearValidation } from './validation.js';
+
+
 const cardTemplate = document.querySelector('#card-template').content;
 
 const placesList = document.querySelector('.places__list');
@@ -27,6 +30,7 @@ const profileDescription = document.querySelector('.profile__description');
 
 // Находим форму в DOM
 const editFormElement = document.querySelector('[name="edit-profile"]');// Воспользуйтесь методом querySelector()
+console.log(editFormElement)
 // Находим поля формы в DOM
 const nameInput = document.querySelector('.popup__input_type_name'); // Воспользуйтесь инструментом .querySelector()
 const jobInput = document.querySelector('.popup__input_type_description'); // Воспользуйтесь инструментом .querySelector()
@@ -42,6 +46,15 @@ const cardUrlInput = document.querySelector('.popup__input_type_url');
 // Поиск попапа для открытия картинки карточки в DOM
 const popupImg = document.querySelector('.popup_type_image');
 
+const validationConfig = {
+    formSelector: ".popup__form",
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: '.popup__button_disabled',
+    inputErrorClass: '.popup__input_type_error',
+    errorClass: '.popup__error_visible'
+}
+
 // @todo: Функция создания карточки
 initialCards.forEach((item) => {
 addCard(item);
@@ -49,22 +62,26 @@ addCard(item);
 
 // @todo: Вывести карточки на страницу
 function addCard(item) {
-const cardElement = createCard(item,deleteCard,cardLike,showImg);
-placesList.append(cardElement);
+  const cardElement = createCard(item,deleteCard,cardLike,showImg);
+  placesList.append(cardElement);
 }
 
 // Создание попапа на кнопку редактирования профиля
 editButton.addEventListener('click', function(evt) {
-evt.preventDefault();
-nameInput.value = profileTitle.textContent;
-jobInput.value = profileDescription.textContent;
-openModal(editCardPopup);
+  evt.preventDefault();
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+  clearValidation(editFormElement, validationConfig);
+  openModal(editCardPopup);
 })
 
 // Создание попапа на кнопку Плюсик
 createButton.addEventListener('click', function(evt){
-evt.preventDefault();
-openModal(newCardPopup);
+  evt.preventDefault();
+  cardNameInput.value = '';
+  cardUrlInput.value = '';
+  clearValidation(addCardForm, validationConfig);
+  openModal(newCardPopup);
 })
 
 // ----------------------------
@@ -72,13 +89,13 @@ openModal(newCardPopup);
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
 function createFormSubmit(evt) {
-evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
 // Так мы можем определить свою логику отправки.
 // О том, как это делать, расскажем позже.
 
 // Получите значение полей jobInput и nameInput из свойства value
-const job = jobInput.value;
-const name = nameInput.value;
+  const job = jobInput.value;
+  const name = nameInput.value;
 // Выберите элементы, куда должны быть вставлены значения полей
 
 // Вставьте новые значения с помощью textContent
@@ -119,3 +136,10 @@ profileCaption.textContent = item.name;
 openModal(popupImg);
 }
 
+
+// console.log(validationConfig);
+
+enableValidation(validationConfig); 
+  
+  
+  
