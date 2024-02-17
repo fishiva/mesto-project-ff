@@ -20,3 +20,17 @@
     margin-right: 0;
   }
 }
+
+.profile__image:after {
+  background-color: rgba(0,0,0,.5);
+  background-image: url(./pencil-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  content: "";
+  display: block;
+}
+
+.profile__image:hover.profile__image:after {
+  height: 100%
+}
+

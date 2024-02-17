@@ -8,3 +8,12 @@
   /*Либо с точками из макета, либо этот набор свойств для эллипсиса текста в можно лучше*/
   margin: 0;
 }
+
+.card_footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  cursor: pointer;
+}
