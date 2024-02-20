@@ -1,18 +1,18 @@
-const showInputError = (formSelector, inputSelector, errorMessage) => {
+const showInputError = (formSelector, inputSelector, errorMessage,validationConfig) => {
   const errorElement = formSelector.querySelector(`.${inputSelector.id}-error`);
-  inputSelector.classList.add('popup__input_type_error');
+  inputSelector.classList.add(validationConfig.inputErrorClass);
   errorElement.textContent = errorMessage;
-  errorElement.classList.add('popup__error_visible');
+  errorElement.classList.add(validationConfig.errorClass);
 }
 
-const hideInputError = (formSelector, inputElement) => {
+const hideInputError = (formSelector, inputElement,validationConfig) => {
   const errorElement = formSelector.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove('popup__input_type_error');
-  errorElement.classList.remove('popup__error_visible');
+  inputElement.classList.remove(validationConfig.inputErrorClass);
+  errorElement.classList.remove(validationConfig.errorClass);
   errorElement.textContent = '';
 }
 
-const isValid = (formSelector, inputSelector) => {
+const isValid = (formSelector, inputSelector,validationConfig) => {
   if (inputSelector.validity.patternMismatch) {
     inputSelector.setCustomValidity(inputSelector.dataset.errorMessage);
   } else {
@@ -20,9 +20,9 @@ const isValid = (formSelector, inputSelector) => {
   }
 
   if (!inputSelector.validity.valid) {
-    showInputError(formSelector, inputSelector, inputSelector.validationMessage);
+    showInputError(formSelector, inputSelector, inputSelector.validationMessage,validationConfig);
   } else { 
-    hideInputError(formSelector, inputSelector);
+    hideInputError(formSelector, inputSelector,validationConfig);
   }
 }
 
@@ -51,20 +51,20 @@ const setEventListener = (formSelector,validationConfig) => {
 
   inputList.forEach((inputSelector) => {
     inputSelector.addEventListener('input', () => {
-      isValid(formSelector,inputSelector);
+      isValid(formSelector,inputSelector,validationConfig);
       toggleButtonState(inputList,buttomElement,validationConfig);
       })
   })
 }
 
-export const clearValidation = (profileForm, validationConfig) => {
+export const clearForm = (profileForm, validationConfig) => {
   const inputList = Array.from(profileForm.querySelectorAll(validationConfig.inputSelector));
   const buttomElement = profileForm.querySelector(validationConfig.submitButtonSelector);
 
   inputList.forEach((inputSelector) => {
-    hideInputError(profileForm, inputSelector);
+    hideInputError(profileForm, inputSelector,validationConfig);
   });
-
+  // profileForm.reset();
   toggleButtonState(inputList, buttomElement,validationConfig);
 }
 

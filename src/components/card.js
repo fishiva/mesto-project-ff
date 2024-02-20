@@ -1,6 +1,6 @@
 import {requestDeleteLike, requestPutLike } from "./api";
 
-export function createCard(userInfo, item, deleteCard, cardLike,showImg, likeCounter, onDelete, cardDelete) {
+export function createCard(userInfo, item, deleteCard, cardLike,showImg, onDelete, cardDelete) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const cardImg = cardElement.querySelector('.card__image');
@@ -12,21 +12,17 @@ export function createCard(userInfo, item, deleteCard, cardLike,showImg, likeCou
 
   // Проверка стоял ли лайк мой на странице
   if (userInfo !== undefined) {
-    if (item.likes.length > 0) {
-    item.likes.forEach(element => {
-      if(element._id === userInfo._id) {
-        likeButton.classList.add('card__like-button_is-active');
-      }
-    });
+    if (item.likes.some(elemenet => elemenet._id === userInfo)){
+      likeButton.classList.add('card__like-button_is-active');
+    }
   }
-}
-  counterOfLikes(cardElement,likeCounter);
+  counterOfLikes(cardElement, item);
 
   const cardDeletebutton = cardElement.querySelector('.card__delete-button');
   cardDeletebutton.disabled = onDelete;
-  cardDeletebutton.addEventListener('click', (e) => {cardDelete(e, item)});
+  cardDeletebutton.addEventListener('click', (e) => {cardDelete(e, item, cardElement)});
 
-  likeButton.addEventListener('click', (e) => {cardLike(e, item, likeCounter, cardElement)}); 
+  likeButton.addEventListener('click', (e) => {cardLike(e, item, cardElement)}); 
 
   cardImg.addEventListener('click', () => {showImg(item)});
 
@@ -34,19 +30,40 @@ export function createCard(userInfo, item, deleteCard, cardLike,showImg, likeCou
 }
 
 export function deleteCard(e) {
-  e.target.closest('.places__item').remove()
+  e.target.closest('.places__item').remove();
 }
 
-export function cardLike(evt, card,likeCounter,cardElement) {
+// export const cardLike = (evt, card, cardElement) =>  {evt.target.classList.contains('card__like-button_is-active') ? 
+// requestDeleteLike(evt, card._id,card,cardElement) : requestPutLike(evt, card._id, card, cardElement);
+// }
+// cardLike(evt, card, cardElement)
+//   .then((res) => {
+//     card.likes.length = res.likes.length;
+//     cardElement.querySelector('.like_counter').textContent = card.likes.length;
+//     evt.target.classList.toggle('card__like-button_is-active')
+//   }) 
+
+export function cardLike(evt, card, cardElement) {
   if(evt.target.classList.contains('card__like-button_is-active')) {
-    requestDeleteLike(evt, card._id,card,likeCounter,cardElement);
+    requestDeleteLike(evt, card._id,card,cardElement)
+      .then((res) => {
+        card.likes.length = res.likes.length;
+        cardElement.querySelector('.like_counter').textContent = card.likes.length;
+        evt.target.classList.toggle('card__like-button_is-active')
+    }
+    );
   } else {
-    requestPutLike(evt, card._id, card, likeCounter,cardElement);
+    requestPutLike(evt, card._id, card, cardElement)
+      .then((res) => {
+        card.likes.length = res.likes.length
+        cardElement.querySelector('.like_counter').textContent = card.likes.length;
+        evt.target.classList.toggle('card__like-button_is-active')
+    });
   }
   // evt.target.classList.toggle('card__like-button_is-active');
 }
 
-export function counterOfLikes(cardElement,likeCounter) {
-  cardElement.querySelector('.like_counter').textContent = likeCounter;
+export function counterOfLikes(cardElement,item) {
+  cardElement.querySelector('.like_counter').textContent = item.likes.length;
 }
 

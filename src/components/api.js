@@ -20,109 +20,78 @@ export const requestUserInformation = () => {
   return fetch(`${config.baseUrl}/users/me`, {
   headers: config.headers
   })
-  .then(res => isAnyError(res))
-  .then((data) => {return data})
+  .then(isAnyError)
   } 
 
 // Получение карточек с сервера 
-export const requestCard = () => {
+export const requestCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then(res => isAnyError(res))
-  .then((data) => {return data})
+  .then(isAnyError)
 }
 
 // Запрос PATH на редактирование профиля на сервере
-export const editingProfile = (userName,userAbout) => {
-  fetch('https://nomoreparties.co/v1/wff-cohort-6/users/me', {
+export const editProfile = (userName,userAbout) => {
+  return fetch('https://nomoreparties.co/v1/wff-cohort-6/users/me', {
     method: 'PATCH',
-    headers: {
-      authorization: '625fde94-9798-42e8-aaa0-f08e4c6074eb',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: userName,
       about: userAbout
     })
   }) 
-  .then(res => isAnyError(res))
-  .then(res => {return res})
+  .then(isAnyError)
 }
 
 
 export const postNewCard = (card) => {
-  fetch('https://nomoreparties.co/v1/wff-cohort-6/cards', {
+  return fetch('https://nomoreparties.co/v1/wff-cohort-6/cards', {
     method: 'POST',
-    headers: {
-      authorization: '625fde94-9798-42e8-aaa0-f08e4c6074eb',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify ({
       name: card.name,
       link: card.link
     })
   })
-  .then((res) => isAnyError(res))
+  .then(isAnyError)
 }
 
 
 export const requestCardDelete = (cardId) => {
-  fetch(`${config.baseUrl}/cards/${cardId}`, {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
-    headers: {
-      authorization: '625fde94-9798-42e8-aaa0-f08e4c6074eb',
-      'Content-Type': 'application/json'
-    }
+    headers: config.headers
   })
-  .then(res=> isAnyError(res))
+  .then(isAnyError)
 }
 
 
-export const requestPutLike = (evt, cardId,card,likeCounter,cardElement) => {
-  fetch(`${config.baseUrl}/cards/${cardId}/likes`, {
+export const requestPutLike = (evt, cardId,card,cardElement) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}/likes`, {
     method: "PUT",
     headers: config.headers,
   })
-  .then(res => isAnyError(res))
-  .then( (res) => {
-    likeCounter = res.likes.length
-  })
-  .then( () => {
-    cardElement.querySelector('.like_counter').textContent = likeCounter;}
-  )
-  .then ( () => {
-    evt.target.classList.toggle('card__like-button_is-active')}
-  )
+  .then(isAnyError)
 }
 
 
-export const requestDeleteLike = (evt, cardId, card,likeCounter,cardElement) => {
-  fetch(`${config.baseUrl}/cards/${cardId}/likes`, {
+export const requestDeleteLike = (evt, cardId, card,cardElement) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}/likes`, {
     method: "DELETE",
     headers: config.headers,
   })
-  .then(res => isAnyError(res))
-  .then( (res) => {
-    likeCounter = res.likes.length}
-  )
-  .then( () => {
-    cardElement.querySelector('.like_counter').textContent = likeCounter}
-  )
-  .then ( () => {
-    evt.target.classList.toggle('card__like-button_is-active')}
-  )
+  .then(isAnyError)
 }
 
 
 export const requestChangeAvatar = (avatarUrl) => {
-  fetch(`${config.baseUrl}/users/me/avatar`, {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({
       avatar: avatarUrl
     })
   })
-  
-  .then(res => isAnyError(res));
+  .then(isAnyError);
 }
