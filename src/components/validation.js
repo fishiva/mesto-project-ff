@@ -57,12 +57,12 @@ const setEventListener = (formSelector,validationConfig) => {
   })
 }
 
-export const clearForm = (profileForm, validationConfig) => {
-  const inputList = Array.from(profileForm.querySelectorAll(validationConfig.inputSelector));
-  const buttomElement = profileForm.querySelector(validationConfig.submitButtonSelector);
+export const clearValidation = (formElement, validationConfig) => { 
+  const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
+  const buttomElement = formElement.querySelector(validationConfig.submitButtonSelector);
 
   inputList.forEach((inputSelector) => {
-    hideInputError(profileForm, inputSelector,validationConfig);
+    hideInputError(formElement, inputSelector,validationConfig);
   });
   // profileForm.reset();
   toggleButtonState(inputList, buttomElement,validationConfig);
